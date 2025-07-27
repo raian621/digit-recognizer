@@ -18,7 +18,7 @@ async def get_inference_result():
     "Accepts an array of 28 x 28 8-bit values to be used as an input to the "
     + "digit recognition model"
   ),
-  response_class={422: ErrorMessage},
+  response_class={422: ErrorMessage}, # type: ignore
 )
 async def make_guess(request: Request):
   payload_size = request.headers.get("Content-Length")
