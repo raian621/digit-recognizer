@@ -1,5 +1,6 @@
 from threading import Lock
 
+
 class RwLock:
   reader_lock: Lock
   writer_lock: Lock
@@ -23,7 +24,7 @@ class RwLock:
     if self.reader_count == 0:
       self.writer_lock.release()
     self.reader_lock.release()
-  
+
   def lock_write(self):
     self.writer_lock.acquire()
 

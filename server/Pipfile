@@ -9,6 +9,7 @@ python-multipart = "*"
 numpy = "*"
 tensorflow = "*"
 uvicorn = "*"
+prometheus-fastapi-instrumentator = "*"
 
 [dev-packages]
 pytest = "*"
