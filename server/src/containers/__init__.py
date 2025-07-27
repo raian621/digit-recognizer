@@ -1,4 +1,4 @@
-from src.containers.queue import Queue
-from src.containers.lru_cache import LruCache
+from .queue import Queue
+from .lru_cache import LruCache
 
 __all__ = ["Queue", "LruCache"]

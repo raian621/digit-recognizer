@@ -1,4 +1,4 @@
-from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
-class ErrorMessage(JSONResponse):
+class ErrorMessage(BaseModel):
   message: str

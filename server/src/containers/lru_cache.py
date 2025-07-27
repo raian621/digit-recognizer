@@ -3,7 +3,7 @@ This file contains an implementation of a thread-safe LRU cache
 """
 
 from collections import OrderedDict
-from src.containers.util import RwLock
+from .util import RwLock
 
 
 class LruCache:

@@ -8,6 +8,7 @@ fastapi = {extras = ["standard"], version = "*"}
 python-multipart = "*"
 numpy = "*"
 tensorflow = "*"
+uvicorn = "*"
 
 [dev-packages]
 pytest = "*"

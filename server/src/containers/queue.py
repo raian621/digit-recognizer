@@ -2,7 +2,7 @@
 This file contains an implementation of a thread-safe queue
 """
 
-from src.containers.util import RwLock
+from .util import RwLock
 from collections import deque
 
 
