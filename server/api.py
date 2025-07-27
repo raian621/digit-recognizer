@@ -8,6 +8,6 @@ async def get_inference_result():
   pass
 
 
-@router.post("/upload/")
-async def upload_drawing():
+@router.post("/make_guess/")
+async def make_guess():
   pass

@@ -9,9 +9,7 @@ function Digits() {
   return (
     <div className="digits">
       {opacities.map(([opacity, _], idx) => (
-        <div className="digits">
-          <Digit index={idx} opacity={opacity} />
-        </div>
+        <Digit key={idx} index={idx} opacity={opacity} />
       ))}
     </div>
   );
