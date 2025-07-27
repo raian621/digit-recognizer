@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from typing import Literal
 
+
 # Holds multiple threads that use the same model data to perform inference
 class ModelPool:
   executor: ThreadPoolExecutor

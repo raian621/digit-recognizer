@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-import api
-import env
-
+from src import api, env
 
 app = FastAPI()
 app.include_router(api.router)
