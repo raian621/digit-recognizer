@@ -8,7 +8,7 @@ and [Uvicorn](https://www.uvicorn.org/) to serve the app. It uses
 
 ## TODO
 
-- [ ] Add model executor
+- [ ] Add model executor / pool
 - [ ] Connect client to backend
 
 ## Usage
@@ -29,5 +29,3 @@ in the `server` directory.
 Run client unit tests with `yarn test` in the `client` directory.
 
 Run server unit tests with `pipenv run coverage run -m pytest` in the `server` directory. To view the coverage report, run `pipenv run coverage report` in the `server` directory.
-
-

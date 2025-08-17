@@ -7,13 +7,16 @@ import env
 import api
 from containers import Queue, LruCache
 
-
+instrumentator: Instrumentator | None = None
 queue = Queue(env.MAX_QUEUE_SIZE)
 cache = LruCache(env.MAX_LRU_CACHE_SIZE)
+
 app = FastAPI()
-Instrumentator().instrument(app).expose(app, endpoint="/prometheus/metrics")
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app, endpoint="/prometheus/metrics")
 app.state.queue = queue
 app.state.cache = cache
+
 app.include_router(api.router)
 app.mount(
   "/", StaticFiles(directory=env.STATIC_CLIENT_DIR, html=True), name="static"

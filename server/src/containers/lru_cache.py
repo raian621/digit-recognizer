@@ -36,3 +36,8 @@ class LruCache:
     if len(self.data) > self.max_size:
       self.data.popitem(last=False)
     self.rw_lock.unlock_write()
+
+  def __delitem__(self, key):
+    self.rw_lock.lock_write()
+    del self.data[key]
+    self.rw_lock.unlock_write()

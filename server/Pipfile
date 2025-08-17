@@ -7,13 +7,14 @@ name = "pypi"
 fastapi = {extras = ["standard"], version = "*"}
 python-multipart = "*"
 numpy = "*"
-tensorflow = "*"
 uvicorn = "*"
 prometheus-fastapi-instrumentator = "*"
+tensorflow = "*"
 
 [dev-packages]
 pytest = "*"
 ruff = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.10"

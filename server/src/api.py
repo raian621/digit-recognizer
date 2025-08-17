@@ -19,15 +19,20 @@ def get_cache(request: Request) -> LruCache:
   return request.app.state.cache
 
 
-@router.get("/inference/")
+@router.get("/inference")
 async def get_inference_result(
   guess_id: str, cache: LruCache = Depends(get_cache)
 ):
   maybe_result = cache[guess_id]
   if maybe_result:
     (status, result) = maybe_result
-    return JSONResponse(GuessResultMessage(status=status, result=result))
-  return JSONResponse(GuessResultMessage(status="NOT_FOUND"))
+    return JSONResponse(
+      GuessResultMessage(status=status, result=result).model_dump()
+    )
+  return JSONResponse(
+    GuessResultMessage(status="NOT_FOUND").model_dump(),
+    status_code=HTTPStatus.NOT_FOUND,
+  )
 
 
 @router.post(
@@ -47,7 +52,6 @@ async def make_guess(request: Request, queue=Depends(get_queue)):
   # I hate this line of code, but whatever (if None, default to 0)
   payload_size = int(request.headers.get("Content-Length") or 0)
   if payload_size != IMAGE_SIZE:
-    print(type(payload_size), type(IMAGE_SIZE))
     return JSONResponse(
       ErrorMessage(
         message="image data was an incorrect size"
