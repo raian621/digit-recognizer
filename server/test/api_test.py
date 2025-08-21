@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 import pytest
 from http import HTTPStatus
-import prometheus_fastapi_instrumentator as _
 
 from src.app import app
 from src.serving import QueuedMessage, GuessResultMessage
@@ -44,6 +43,7 @@ def test_queue_full_error(client):
     headers={"Content-Type": "application/octet-stream"},
   )
   assert res.status_code == HTTPStatus.ACCEPTED
+  # Queue is full, so the server should throttle requests
   res = client.post(
     "/api/make_guess",
     content=bytes(data),

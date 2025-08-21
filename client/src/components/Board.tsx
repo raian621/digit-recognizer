@@ -1,5 +1,9 @@
 import { useEffect, useRef, type RefObject } from "react";
-import { grayscalePixels, resizePixels } from "../lib/imageUtil";
+import {
+  getCanvasPixels,
+  grayscalePixels,
+  resizePixels,
+} from "../lib/imageUtil";
 
 const GUESS_DELAY_MS = 500;
 const OUTPUT_PIXEL_WIDTH = 28;
@@ -8,15 +12,11 @@ const OUTPUT_PIXEL_HEIGHT = 28;
 function getDownscaledGrayscaleCanvasPixelData(
   canvas: HTMLCanvasElement
 ): Uint8Array {
-  const width = canvas.width;
-  const height = canvas.height;
-  const img = canvas.getContext("2d")?.getImageData(0, 0, width, height)!;
-
   return grayscalePixels(
     resizePixels(
-      new Uint8Array(img.data),
-      width,
-      height,
+      getCanvasPixels(canvas),
+      canvas.width,
+      canvas.height,
       OUTPUT_PIXEL_WIDTH,
       OUTPUT_PIXEL_HEIGHT
     )
@@ -44,18 +44,22 @@ export default function Board({
       width={500}
       height={500}
       onMouseDown={(e) => {
-        initX.current = e.clientX - e.currentTarget.offsetLeft;
-        initY.current = e.clientY - e.currentTarget.offsetTop;
+        initX.current =
+          e.clientX - e.currentTarget.getBoundingClientRect().left;
+        initY.current = e.clientY - e.currentTarget.getBoundingClientRect().top;
         mouseDown.current = true;
+        console.log("mouse down");
       }}
       onMouseUp={(e) => {
         e.currentTarget.getContext("2d")!.beginPath();
+        console.log("mouse up");
         mouseDown.current = false;
       }}
       onMouseMove={(e) => {
         if (mouseDown.current) {
-          const newX = e.clientX - e.currentTarget.offsetLeft;
-          const newY = e.clientY - e.currentTarget.offsetTop;
+          console.log("mouse dragging");
+          const newX = e.clientX - e.currentTarget.getBoundingClientRect().left;
+          const newY = e.clientY - e.currentTarget.getBoundingClientRect().top;
           drawLine(
             e.currentTarget.getContext("2d")!,
             initX.current,
@@ -65,7 +69,7 @@ export default function Board({
           );
           initX.current = newX;
           initY.current = newY;
-          if (Date.now() - lastGuessTime.current <= GUESS_DELAY_MS) {
+          if (Date.now() - lastGuessTime.current >= GUESS_DELAY_MS) {
             const canvas = e.currentTarget;
             const pixels = getDownscaledGrayscaleCanvasPixelData(canvas);
             console.log(pixels.length);

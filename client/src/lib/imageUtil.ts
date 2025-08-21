@@ -1,3 +1,13 @@
+// Returns pixels in RGB format
+export function getCanvasPixels(canvas: HTMLCanvasElement): Uint8Array {
+  const width = canvas.width;
+  const height = canvas.height;
+  // Filter out every 4th value, e.g. filter out the A in every RGBA tuple
+  return new Uint8Array(
+    canvas.getContext("2d")?.getImageData(0, 0, width, height)!.data!
+  ).filter((_, i) => i % 4 != 0);
+}
+
 export function resizePixels(
   rgbData: Uint8Array,
   w1: number,
@@ -13,9 +23,9 @@ export function resizePixels(
   let x0 = 0;
   let y0 = 0;
   for (let y = 0; y < h2; y++) {
-    const y1 = ((y + 1) * h1) / h2 | 0;
+    const y1 = (((y + 1) * h1) / h2) | 0;
     for (let x = 0; x < w2; x++) {
-      const x1 = ((x + 1) * w1) / w2 | 0;
+      const x1 = (((x + 1) * w1) / w2) | 0;
       const [r, g, b] = averagePixels(rgbData, w1, x0, y0, x1 - x0, y1 - y0);
       const offset = 3 * (x + y * w2);
       resized[offset] = r;
