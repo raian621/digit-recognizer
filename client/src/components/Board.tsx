@@ -5,23 +5,9 @@ import {
   resizePixels,
 } from "../lib/imageUtil";
 
-const GUESS_DELAY_MS = 500;
+const GUESS_DELAY_MS = 200;
 const OUTPUT_PIXEL_WIDTH = 28;
 const OUTPUT_PIXEL_HEIGHT = 28;
-
-function getDownscaledGrayscaleCanvasPixelData(
-  canvas: HTMLCanvasElement
-): Uint8Array {
-  return grayscalePixels(
-    resizePixels(
-      getCanvasPixels(canvas),
-      canvas.width,
-      canvas.height,
-      OUTPUT_PIXEL_WIDTH,
-      OUTPUT_PIXEL_HEIGHT
-    )
-  );
-}
 
 export default function Board({
   ref,
@@ -48,14 +34,18 @@ export default function Board({
           e.clientX - e.currentTarget.getBoundingClientRect().left;
         initY.current = e.clientY - e.currentTarget.getBoundingClientRect().top;
         mouseDown.current = true;
-        console.log("mouse down");
+        drawLine(
+          e.currentTarget.getContext("2d")!,
+          initX.current,
+          initY.current,
+          initX.current,
+          initY.current
+        );
       }}
-      onMouseUp={(e) => {
-        e.currentTarget.getContext("2d")!.beginPath();
-        console.log("mouse up");
+      onMouseUp={() => {
         mouseDown.current = false;
       }}
-      onMouseMove={(e) => {
+      onMouseMove={async (e) => {
         if (mouseDown.current) {
           console.log("mouse dragging");
           const newX = e.clientX - e.currentTarget.getBoundingClientRect().left;
@@ -70,13 +60,40 @@ export default function Board({
           initX.current = newX;
           initY.current = newY;
           if (Date.now() - lastGuessTime.current >= GUESS_DELAY_MS) {
+            lastGuessTime.current = Date.now();
             const canvas = e.currentTarget;
-            const pixels = getDownscaledGrayscaleCanvasPixelData(canvas);
-            console.log(pixels.length);
+            const pixels = await getDownscaledGrayscaleCanvasPixelData(canvas);
+            let lines = "";
+            for (let y = 0; y < 28; y++) {
+              let line = "";
+              for (let x = 0; x < 28; x++) {
+                if (pixels[y * 28 + x] == 0) {
+                  line += "# ";
+                } else {
+                  line += "  ";
+                }
+              }
+              lines += line + '\n';
+            }
+            console.log(lines)
           }
         }
       }}
     ></canvas>
+  );
+}
+
+async function getDownscaledGrayscaleCanvasPixelData(
+  canvas: HTMLCanvasElement
+): Promise<Uint8Array> {
+  return grayscalePixels(
+    resizePixels(
+      getCanvasPixels(canvas),
+      canvas.width,
+      canvas.height,
+      OUTPUT_PIXEL_WIDTH,
+      OUTPUT_PIXEL_HEIGHT
+    )
   );
 }
 
@@ -91,8 +108,8 @@ function drawLine(
   ctx.fillStyle = "black";
   ctx.lineWidth = width;
   ctx.lineCap = "round";
-  ctx.lineTo(x1, y1);
-  ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(x2, y2);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
 }

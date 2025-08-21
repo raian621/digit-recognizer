@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Digit from "./Digit";
+import { PredictionContext } from "src/context/PredictionContext";
 
 function Digits() {
-  const opacities = new Array(10).fill(1.0).map((opacity) => useState(opacity));
-  useEffect(() => {
-    opacities[0][1](0.2);
-  }, []);
+  const prediction = useContext(PredictionContext)
   return (
     <div className="digits">
-      {opacities.map(([opacity, _], idx) => (
+      {prediction.map((opacity, idx) => (
         <Digit key={idx} index={idx} opacity={opacity} />
       ))}
     </div>

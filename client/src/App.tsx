@@ -1,17 +1,25 @@
-import { createRef, useEffect } from "react";
+import { createRef, useEffect, useState } from "react";
 import Board from "./components/Board";
 import Digits from "./components/Digits";
 import "./styles/App.css";
+import { PredictionContext, SetPredictionContext } from "./context/PredictionContext";
 
 function App() {
   const canvasRef = createRef<HTMLCanvasElement>();
+  const [prediction, setPrediction] = useState<number[]>(
+    new Array(10).fill(1.0)
+  );
 
-  useEffect(() => {console.log("App rerendered")}, [])
+  useEffect(() => {
+    console.log("App rerendered");
+  }, []);
 
   return (
     <div className="App">
       <h1>Digit recognizer</h1>
-      <Board ref={canvasRef} />
+      <SetPredictionContext value={setPrediction}>
+        <Board ref={canvasRef} />
+      </SetPredictionContext>
       <button
         onClick={() => {
           const canvas = canvasRef.current;
@@ -24,7 +32,9 @@ function App() {
       >
         Clear
       </button>
-      <Digits />
+      <PredictionContext value={prediction}>
+        <Digits />
+      </PredictionContext>
     </div>
   );
 }
